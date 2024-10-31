@@ -51,7 +51,7 @@ Then, for every grammar rule we define a python class that will end up being use
 let's consider the class `WrappedExpression`
 
 ```python
-@chain([rid("OpenParen"), rid("Expression"),rid("ClosedParen")])
+@chain([rid("OpenParen"), rid("Expression"), rid("ClosedParen")])
 class WrappedExpression(MathSettings):
     def __repr__(self):
         return " ( " + self.elems[1].__repr__() + " ) "
