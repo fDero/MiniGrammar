@@ -4,6 +4,10 @@ from .exceptions import *
 import re
 import io
 
+def _ignore_every_non_important_character(clazz, iterator_copy):
+    while clazz.ignore_characters(iterator_copy.peek()):
+        iterator_copy.advance()
+
 def _attempt_parse_exact_match(keyword_or_symbol, iterator_copy, fail_is_error):
     for char in keyword_or_symbol:
         if iterator_copy.peek() != char:
@@ -12,7 +16,6 @@ def _attempt_parse_exact_match(keyword_or_symbol, iterator_copy, fail_is_error):
             else:
                 return None
         iterator_copy.advance()
-    iterator_copy.synchronize_with_source()
     return keyword_or_symbol
 
 
@@ -65,6 +68,7 @@ def exact_match(keyword_or_symbol):
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
             _attempt_parse_exact_match(keyword_or_symbol, iterator_copy, True)
+            iterator_copy.synchronize_with_source()
         setattr(clazz, "__init__", custom__init__)
         return clazz
     return set_keyword_or_symbol_pattern_on_class
@@ -76,6 +80,7 @@ def regex_pattern(pattern):
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
             string_buffer = io.StringIO()
+            _ignore_every_non_important_character(clazz, iterator_copy)
             _keep_parsing_until_regex_match(pattern, string_buffer, iterator_copy)
             _pretend_regex_match(pattern, string_buffer)
             _keep_parsing_until_regex_fail(pattern, string_buffer, iterator_copy)
@@ -91,19 +96,18 @@ def repeating(rule_name, minimum, maximum, delimiter, allow_trailing, enforce_tr
         clazz.context[clazz.get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
+            _ignore_every_non_important_character(clazz, iterator_copy)
             parsed_element = _attempt_parse_rule_by_name(clazz.context, rule_name, iterator_copy, minimum is not None and minimum <= 0)
             counter = 0 if parsed_element is None else 1
             extracted_delimiter = delimiter
-            print("A: ", iterator_copy.peek(), " -> ", iterator_copy.get_index())
             while parsed_element is not None and extracted_delimiter is not None:
+                _ignore_every_non_important_character(clazz, iterator_copy)
                 extracted_delimiter = _attempt_parse_exact_match(delimiter, iterator_copy, enforce_trailing)
-                print("B: ", iterator_copy.peek(), " -> ", iterator_copy.get_index())
                 if extracted_delimiter is not None:
+                    _ignore_every_non_important_character(clazz, iterator_copy)
                     parsed_element = _attempt_parse_rule_by_name(clazz.context, rule_name, iterator_copy, not allow_trailing)
                 counter += 1
-                print("C: ", iterator_copy.peek(), " -> ", iterator_copy.get_index())
             _pretend_counter_within_bounds(counter, minimum, maximum)
-            print("D: ", iterator_copy.peek(), " -> ", iterator_copy.get_index())
             iterator_copy.synchronize_with_source()
         setattr(clazz, "__init__", custom__init__)
         return clazz
@@ -115,6 +119,7 @@ def chain(rule_names):
         clazz.context[clazz.get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
+            _ignore_every_non_important_character(clazz, iterator_copy)
             for r_name in rule_names:
                 parsed_element = _attempt_parse_rule_by_name(clazz.context, r_name, iterator_copy, True)
             iterator_copy.synchronize_with_source()
@@ -128,6 +133,7 @@ def either(rule_names):
         clazz.context[clazz.get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
+            _ignore_every_non_important_character(clazz, iterator_copy)
             for r_name in rule_names:
                 parsed_element = _attempt_parse_rule_by_name(clazz.context, r_name, iterator_copy, False)
                 if parsed_element is not None:
