@@ -67,8 +67,10 @@ def exact_match(keyword_or_symbol):
         clazz.context[clazz.get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
+            _ignore_every_non_important_character(clazz, iterator_copy)
             _attempt_parse_exact_match(keyword_or_symbol, iterator_copy, True)
             iterator_copy.synchronize_with_source()
+            self.elems = [keyword_or_symbol]
         setattr(clazz, "__init__", custom__init__)
         return clazz
     return set_keyword_or_symbol_pattern_on_class
@@ -86,6 +88,7 @@ def regex_pattern(pattern):
             _keep_parsing_until_regex_fail(pattern, string_buffer, iterator_copy)
             _pretend_ignored_trailing_character_or_none(clazz.ignore_characters, iterator_copy)
             iterator_copy.synchronize_with_source()
+            self.elems = [string_buffer.getvalue()]
         setattr(clazz, "__init__", custom__init__)
         return clazz
     return set_regex_pattern_on_class
@@ -100,12 +103,14 @@ def repeating(rule_name, minimum, maximum, delimiter, allow_trailing, enforce_tr
             parsed_element = _attempt_parse_rule_by_name(clazz.context, rule_name, iterator_copy, minimum is not None and minimum <= 0)
             counter = 0 if parsed_element is None else 1
             extracted_delimiter = delimiter
+            self.elems = [parsed_element]
             while parsed_element is not None and extracted_delimiter is not None:
                 _ignore_every_non_important_character(clazz, iterator_copy)
                 extracted_delimiter = _attempt_parse_exact_match(delimiter, iterator_copy, enforce_trailing)
                 if extracted_delimiter is not None:
                     _ignore_every_non_important_character(clazz, iterator_copy)
                     parsed_element = _attempt_parse_rule_by_name(clazz.context, rule_name, iterator_copy, not allow_trailing)
+                    self.elems.append(parsed_element)
                 counter += 1
             _pretend_counter_within_bounds(counter, minimum, maximum)
             iterator_copy.synchronize_with_source()
@@ -120,8 +125,10 @@ def chain(rule_names):
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
             _ignore_every_non_important_character(clazz, iterator_copy)
+            self.elems = []
             for r_name in rule_names:
                 parsed_element = _attempt_parse_rule_by_name(clazz.context, r_name, iterator_copy, True)
+                self.elems.append(parsed_element)
             iterator_copy.synchronize_with_source()
         setattr(clazz, "__init__", custom__init__)
         return clazz
@@ -135,9 +142,9 @@ def either(rule_names):
             iterator_copy = iterator_over_input_token_stream.clone()
             _ignore_every_non_important_character(clazz, iterator_copy)
             for r_name in rule_names:
-                parsed_element = _attempt_parse_rule_by_name(clazz.context, r_name, iterator_copy, False)
-                if parsed_element is not None:
-                    print("synchronization")
+                self._elem = _attempt_parse_rule_by_name(clazz.context, r_name, iterator_copy, False)
+                if self._elem is not None:
+                    self.elems = [self._elem]
                     iterator_copy.synchronize_with_source()
                     return
             raise CannotParseException()

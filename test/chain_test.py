@@ -6,7 +6,7 @@ from minigrammar.parsing import *
 from minigrammar.exceptions import *
 
 
-class ParsingEither(unittest.TestCase):
+class ParsingChain(unittest.TestCase):
 
     def test_case_digest_everything_successfully(self):
         @exact_match("10")
@@ -15,7 +15,7 @@ class ParsingEither(unittest.TestCase):
         @exact_match("Hello")
         class Hello(BasicLanguageSettings): pass
 
-        @chain({Hello.get_id(), Number10.get_id()})
+        @chain([Number10.get_id(), Hello.get_id()])
         class Number10ThenHello(BasicLanguageSettings): pass
 
         iterator = ParserStringIterator("10Hello")
@@ -29,7 +29,7 @@ class ParsingEither(unittest.TestCase):
         @exact_match("Hello")
         class Hello(BasicLanguageSettings): pass
 
-        @chain({Hello.get_id(), Number10.get_id()})
+        @chain([Number10.get_id(), Hello.get_id()])
         class Number10ThenHello(BasicLanguageSettings): pass
 
         iterator = ParserStringIterator("XX")
@@ -44,7 +44,7 @@ class ParsingEither(unittest.TestCase):
         @exact_match("Hello")
         class Hello(BasicLanguageSettings): pass
 
-        @chain({Hello.get_id(), Number10.get_id()})
+        @chain([Number10.get_id(), Hello.get_id()])
         class Number10ThenHello(BasicLanguageSettings): pass
 
         iterator = ParserStringIterator("")
@@ -59,7 +59,7 @@ class ParsingEither(unittest.TestCase):
         @exact_match("Hello")
         class Hello(BasicLanguageSettings): pass
 
-        @chain({Hello.get_id(), Number10.get_id()})
+        @chain([Number10.get_id(), Hello.get_id()])
         class Number10ThenHello(BasicLanguageSettings): pass
 
         iterator = ParserStringIterator("10")
@@ -74,7 +74,7 @@ class ParsingEither(unittest.TestCase):
         @exact_match("Hello")
         class Hello(BasicLanguageSettings): pass
 
-        @chain({Hello.get_id(), Number10.get_id()})
+        @chain([Number10.get_id(), Hello.get_id()])
         class Number10ThenHello(BasicLanguageSettings): pass
 
         iterator = ParserStringIterator("10He")

@@ -15,7 +15,7 @@ class ParsingEither(unittest.TestCase):
         @exact_match("Hello")
         class Hello(BasicLanguageSettings): pass
 
-        @either({Hello.get_id(), Number10.get_id()})
+        @either([Hello.get_id(), Number10.get_id()])
         class Number10OrHello(BasicLanguageSettings): pass
 
         iterator = ParserStringIterator("Hello")
@@ -29,7 +29,7 @@ class ParsingEither(unittest.TestCase):
         @exact_match("Hello")
         class Hello(BasicLanguageSettings): pass
 
-        @either({Hello.get_id(), Number10.get_id()})
+        @either([Hello.get_id(), Number10.get_id()])
         class Number10OrHello(BasicLanguageSettings): pass
 
         iterator = ParserStringIterator("10")
@@ -43,7 +43,7 @@ class ParsingEither(unittest.TestCase):
         @exact_match("Hello")
         class Hello(BasicLanguageSettings): pass
 
-        @either({Hello.get_id(), Number10.get_id()})
+        @either([Hello.get_id(), Number10.get_id()])
         class Number10OrHello(BasicLanguageSettings): pass
 
         iterator = ParserStringIterator("XX")
