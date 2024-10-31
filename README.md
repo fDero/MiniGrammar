@@ -5,6 +5,8 @@ into user defined AST-classes. All the user has to do is to decorate the classes
 with the provided decorators. Such decorators will inject into the classes a constructor (`__init__`) and
 a list of parsed elements (`elems`), wich will be accessible for every instance of the classes.
 
+---
+
 Consider the following grammar:
 ```g4
 expression
