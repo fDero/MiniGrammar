@@ -35,11 +35,6 @@ def _keep_parsing_until_regex_fail(pattern, string_buffer, iterator_copy):
         iterator_copy.advance()
 
 
-def _pretend_ignored_trailing_character_or_none(ignore_characters_callback, iterator_copy):
-    if (iterator_copy.peek() is not None) and (not ignore_characters_callback(iterator_copy.peek())):
-        raise CannotParseException()
-
-
 def _pretend_regex_match(pattern, string_buffer):
     if not re.match(pattern, string_buffer.getvalue()):
         raise CannotParseException()
@@ -86,7 +81,6 @@ def regex_pattern(pattern):
             _keep_parsing_until_regex_match(pattern, string_buffer, iterator_copy)
             _pretend_regex_match(pattern, string_buffer)
             _keep_parsing_until_regex_fail(pattern, string_buffer, iterator_copy)
-            _pretend_ignored_trailing_character_or_none(clazz.ignore_characters, iterator_copy)
             iterator_copy.synchronize_with_source()
             self.elems = [string_buffer.getvalue()]
         setattr(clazz, "__init__", custom__init__)

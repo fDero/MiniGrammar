@@ -64,6 +64,6 @@ class ClosedParen(MathSettings):
 
 
 if __name__ == "__main__":
-    iterator = ParserStringIterator("a + b * c")
+    iterator = ParserStringIterator("x*(a+b)")
     expr = Expression(iterator)
     print(expr)
