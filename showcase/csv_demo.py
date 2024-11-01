@@ -1,7 +1,5 @@
 import sys
 from minigrammar import *
-from minigrammar.file_parser_iterator import FileParserIterator
-
 
 class CSVSettings(BasicLanguageSettings):
 

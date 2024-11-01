@@ -72,21 +72,21 @@ class ParsingRepeating(unittest.TestCase):
         @repeating(Number10.get_id(), 1, 3, ',', True, False)
         class Numbers(BasicLanguageSettings): pass
 
-        iterator = StringParserIterator("10, 10, 10, 40")
+        iterator = StringParserIterator("10, 10, 10, 10")
         with self.assertRaises(CannotParseException):
             Numbers(iterator)
         self.assertEqual("1", iterator.peek())
 
-    def test_case_trailing_used(self):
+    def test_case_trailing_used_partially_ok_parsed_prefix(self):
         @exact_match("10")
         class Number10(BasicLanguageSettings): pass
 
         @repeating(Number10.get_id(), None, None, ',', True, False)
         class Numbers(BasicLanguageSettings): pass
 
-        iterator = StringParserIterator("10, 10, 10, 40, ")
+        iterator = StringParserIterator("10, 10, 10, XX, ")
         Numbers(iterator)
-        self.assertNotEqual("1", iterator.peek())
+        self.assertEqual("X", iterator.peek())
 
     def test_case_not_used_but_expected(self):
         @exact_match("10")
