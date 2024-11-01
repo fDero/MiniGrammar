@@ -1,6 +1,6 @@
 import unittest
 
-from minigrammar.iterators import ParserStringIterator
+from minigrammar.string_parser_iterator import StringParserIterator
 from minigrammar.parsing import *
 from minigrammar.exceptions import *
 from minigrammar.language_settings import *
@@ -12,7 +12,7 @@ class ParsingRegexPatterns(unittest.TestCase):
         @regex_pattern(r'\b-?\d+\b')
         class Integer(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10")
+        iterator = StringParserIterator("10")
         Integer(iterator)
         self.assertEqual(None, iterator.peek())
 
@@ -20,7 +20,7 @@ class ParsingRegexPatterns(unittest.TestCase):
         @regex_pattern(r'\b-?\d+\b')
         class Integer(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("XX")
+        iterator = StringParserIterator("XX")
         with self.assertRaises(CannotParseException):
             Integer(iterator)
         self.assertTrue("X" == iterator.peek())
@@ -29,7 +29,7 @@ class ParsingRegexPatterns(unittest.TestCase):
         @regex_pattern(r'\b-?\d+\b')
         class Integer(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("")
+        iterator = StringParserIterator("")
         with self.assertRaises(CannotParseException):
             Integer(iterator)
         self.assertTrue(None == iterator.peek())
@@ -38,7 +38,7 @@ class ParsingRegexPatterns(unittest.TestCase):
         @regex_pattern(r'')
         class Empty(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("")
+        iterator = StringParserIterator("")
         Empty(iterator)
         self.assertTrue(None == iterator.peek())
 

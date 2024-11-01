@@ -1,6 +1,6 @@
 import unittest
 
-from minigrammar.iterators import ParserStringIterator
+from minigrammar.string_parser_iterator import StringParserIterator
 from minigrammar.language_settings import BasicLanguageSettings
 from minigrammar.parsing import *
 from minigrammar.exceptions import *
@@ -18,7 +18,7 @@ class ParsingChain(unittest.TestCase):
         @chain([Number10.get_id(), Hello.get_id()])
         class Number10ThenHello(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10Hello")
+        iterator = StringParserIterator("10Hello")
         Number10ThenHello(iterator)
         self.assertEqual(None, iterator.peek())
 
@@ -32,7 +32,7 @@ class ParsingChain(unittest.TestCase):
         @chain([Number10.get_id(), Hello.get_id()])
         class Number10ThenHello(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("XX")
+        iterator = StringParserIterator("XX")
         with self.assertRaises(CannotParseException):
             Number10ThenHello(iterator)
         self.assertEqual("X", iterator.peek())
@@ -47,7 +47,7 @@ class ParsingChain(unittest.TestCase):
         @chain([Number10.get_id(), Hello.get_id()])
         class Number10ThenHello(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("")
+        iterator = StringParserIterator("")
         with self.assertRaises(CannotParseException):
             Number10ThenHello(iterator)
         self.assertEqual(None, iterator.peek())
@@ -62,7 +62,7 @@ class ParsingChain(unittest.TestCase):
         @chain([Number10.get_id(), Hello.get_id()])
         class Number10ThenHello(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10")
+        iterator = StringParserIterator("10")
         with self.assertRaises(CannotParseException):
             Number10ThenHello(iterator)
         self.assertEqual("1", iterator.peek())
@@ -77,7 +77,7 @@ class ParsingChain(unittest.TestCase):
         @chain([Number10.get_id(), Hello.get_id()])
         class Number10ThenHello(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10He")
+        iterator = StringParserIterator("10He")
         with self.assertRaises(CannotParseException):
             Number10ThenHello(iterator)
         self.assertEqual("1", iterator.peek())

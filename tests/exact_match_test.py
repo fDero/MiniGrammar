@@ -1,6 +1,6 @@
 import unittest
 
-from minigrammar.iterators import ParserStringIterator
+from minigrammar.string_parser_iterator import StringParserIterator
 from minigrammar.parsing import *
 from minigrammar.language_settings import *
 from minigrammar.exceptions import *
@@ -12,7 +12,7 @@ class ParsingExactMatches(unittest.TestCase):
         @exact_match("10")
         class Number10(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10")
+        iterator = StringParserIterator("10")
         Number10(iterator)
         self.assertEqual(None, iterator.peek())
 
@@ -21,13 +21,13 @@ class ParsingExactMatches(unittest.TestCase):
         class Number10(BasicLanguageSettings): pass
 
         with self.assertRaises(CannotParseException):
-            Number10(ParserStringIterator(""))
+            Number10(StringParserIterator(""))
 
     def test_case_nothing_to_digest_but_ok(self):
         @exact_match("")
         class Empty(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("")
+        iterator = StringParserIterator("")
         Empty(iterator)
         self.assertEqual(None, iterator.peek())
 
@@ -35,7 +35,7 @@ class ParsingExactMatches(unittest.TestCase):
         @exact_match("10")
         class Number10(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("50")
+        iterator = StringParserIterator("50")
         with self.assertRaises(CannotParseException):
             Number10(iterator)
         self.assertEqual("5", iterator.peek())

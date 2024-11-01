@@ -1,5 +1,5 @@
 
 from .parsing import *
 from .language_settings import *
-from .iterators import *
+from .string_parser_iterator import *
 from .exceptions import *

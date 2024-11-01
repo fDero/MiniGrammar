@@ -1,6 +1,6 @@
 import unittest
 
-from minigrammar.iterators import ParserStringIterator
+from minigrammar.string_parser_iterator import StringParserIterator
 from minigrammar.language_settings import BasicLanguageSettings
 from minigrammar.parsing import *
 from minigrammar.exceptions import *
@@ -18,7 +18,7 @@ class ParsingEither(unittest.TestCase):
         @either([Hello.get_id(), Number10.get_id()])
         class Number10OrHello(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("Hello")
+        iterator = StringParserIterator("Hello")
         Number10OrHello(iterator)
         self.assertEqual(None, iterator.peek())
 
@@ -32,7 +32,7 @@ class ParsingEither(unittest.TestCase):
         @either([Hello.get_id(), Number10.get_id()])
         class Number10OrHello(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10")
+        iterator = StringParserIterator("10")
         Number10OrHello(iterator)
         self.assertEqual(None, iterator.peek())
 
@@ -46,7 +46,7 @@ class ParsingEither(unittest.TestCase):
         @either([Hello.get_id(), Number10.get_id()])
         class Number10OrHello(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("XX")
+        iterator = StringParserIterator("XX")
         with self.assertRaises(CannotParseException):
             Number10OrHello(iterator)
         self.assertEqual("X", iterator.peek())

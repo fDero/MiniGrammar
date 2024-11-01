@@ -21,7 +21,7 @@ def _attempt_parse_exact_match(keyword_or_symbol, iterator_copy, fail_is_error):
 
 def _keep_parsing_until_regex_match(pattern, string_buffer, iterator_copy):
     while iterator_copy.peek() is not None:
-        if re.match(pattern, string_buffer.getvalue()):
+        if re.fullmatch(pattern, string_buffer.getvalue()):
             break
         string_buffer.write(iterator_copy.peek())
         iterator_copy.advance()
@@ -29,7 +29,7 @@ def _keep_parsing_until_regex_match(pattern, string_buffer, iterator_copy):
 
 def _keep_parsing_until_regex_fail(pattern, string_buffer, iterator_copy):
     while iterator_copy.peek() is not None:
-        if not re.match(pattern, string_buffer.getvalue() + iterator_copy.peek()):
+        if not re.fullmatch(pattern, string_buffer.getvalue() + iterator_copy.peek()):
             break
         string_buffer.write(iterator_copy.peek())
         iterator_copy.advance()

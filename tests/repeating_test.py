@@ -1,6 +1,6 @@
 import unittest
 
-from minigrammar.iterators import ParserStringIterator
+from minigrammar.string_parser_iterator import StringParserIterator
 from minigrammar.language_settings import BasicLanguageSettings
 from minigrammar.parsing import *
 from minigrammar.exceptions import *
@@ -15,7 +15,7 @@ class ParsingRepeating(unittest.TestCase):
         @repeating(Number10.get_id(), None, None, ',', True, False)
         class Numbers(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10,10,10")
+        iterator = StringParserIterator("10,10,10")
         Numbers(iterator)
         self.assertEqual(None, iterator.peek())
 
@@ -26,7 +26,7 @@ class ParsingRepeating(unittest.TestCase):
         @repeating(Number10.get_id(), None, None, ',', True, False)
         class Numbers(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10 , 10 , 10")
+        iterator = StringParserIterator("10 , 10 , 10")
         Numbers(iterator)
         self.assertEqual(None, iterator.peek())
 
@@ -37,7 +37,7 @@ class ParsingRepeating(unittest.TestCase):
         @repeating(Number10.get_id(), None, None, ',', True, False)
         class Numbers(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator(" 10 ,10,10")
+        iterator = StringParserIterator(" 10 ,10,10")
         Numbers(iterator)
         self.assertEqual(None, iterator.peek())
 
@@ -49,7 +49,7 @@ class ParsingRepeating(unittest.TestCase):
         @repeating(Number10.get_id(), None, None, ',', True, False)
         class Numbers(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("XX, 10")
+        iterator = StringParserIterator("XX, 10")
         Numbers(iterator)
         self.assertEqual("X", iterator.peek())
 
@@ -60,7 +60,7 @@ class ParsingRepeating(unittest.TestCase):
         @repeating(Number10.get_id(), 5, None, ',', True, False)
         class Numbers(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("XX, 10")
+        iterator = StringParserIterator("XX, 10")
         with self.assertRaises(CannotParseException):
             Numbers(iterator)
         self.assertEqual("X", iterator.peek())
@@ -72,7 +72,7 @@ class ParsingRepeating(unittest.TestCase):
         @repeating(Number10.get_id(), 1, 3, ',', True, False)
         class Numbers(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10, 10, 10, 40")
+        iterator = StringParserIterator("10, 10, 10, 40")
         with self.assertRaises(CannotParseException):
             Numbers(iterator)
         self.assertEqual("1", iterator.peek())
@@ -84,7 +84,7 @@ class ParsingRepeating(unittest.TestCase):
         @repeating(Number10.get_id(), None, None, ',', True, False)
         class Numbers(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10, 10, 10, 40, ")
+        iterator = StringParserIterator("10, 10, 10, 40, ")
         Numbers(iterator)
         self.assertNotEqual("1", iterator.peek())
 
@@ -95,7 +95,7 @@ class ParsingRepeating(unittest.TestCase):
         @repeating(Number10.get_id(), None, None, ',', True, True)
         class Numbers(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10, 10, 10, 10 ")
+        iterator = StringParserIterator("10, 10, 10, 10 ")
         with self.assertRaises(CannotParseException):
             Numbers(iterator)
         self.assertEqual("1", iterator.peek())
@@ -108,7 +108,7 @@ class ParsingRepeating(unittest.TestCase):
         @repeating(Number10.get_id(), None, None, ',', False, False)
         class Numbers(BasicLanguageSettings): pass
 
-        iterator = ParserStringIterator("10, 10, 10, 10, ")
+        iterator = StringParserIterator("10, 10, 10, 10, ")
         with self.assertRaises(CannotParseException):
             Numbers(iterator)
         self.assertEqual("1", iterator.peek())
