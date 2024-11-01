@@ -29,14 +29,14 @@ change it in such a way to avoid this problem by refactoring it as follows:
 
 ```g4
 expression
-    : mul ((PLUS mul)*) 
+    : addend ((PLUS addend)*) 
     ;
 
-mul
-    : terminal ((STAR terminal)*) 
+addend
+    : factor ((STAR factor)*) 
     ;
 
-terminal
+factor
     : num
     | var
     | wrapped_expression

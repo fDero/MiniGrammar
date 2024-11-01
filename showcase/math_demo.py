@@ -1,4 +1,3 @@
-
 from minigrammar import *
 
 
@@ -9,7 +8,7 @@ class MathSettings(BasicLanguageSettings):
 rid = MathSettings.get_id_of_rule_assuming_in_same_module
 
 
-@repeating(rid("Mul"), 1, None, '+', False, False)
+@repeating(rid("Addend"), 1, None, '+', False, False)
 class Expression(MathSettings):
     def __repr__(self):
         string = self.elems[0].__repr__()
@@ -18,9 +17,8 @@ class Expression(MathSettings):
         return " { " + string + " } "
 
 
-
-@repeating(rid("Terminal"), 1, None, '*', False, False)
-class Mul(MathSettings):
+@repeating(rid("Factor"), 1, None, '*', False, False)
+class Addend(MathSettings):
     def __repr__(self):
         string = self.elems[0].__repr__()
         for elem in self.elems[1:]:
@@ -29,15 +27,10 @@ class Mul(MathSettings):
 
 
 @either([rid("Number"), rid("Variable"), rid("WrappedExpression")])
-class Terminal(MathSettings):
+class Factor(MathSettings):
     def __repr__(self):
         return self.elems[0].__repr__()
 
-
-@chain([rid("OpenParen"), rid("Expression"),rid("ClosedParen")])
-class WrappedExpression(MathSettings):
-    def __repr__(self):
-        return " ( " + self.elems[1].__repr__() + " ) "
 
 @regex_pattern(r'^\d+$')
 class Number(MathSettings):
@@ -49,6 +42,12 @@ class Number(MathSettings):
 class Variable(MathSettings):
     def __repr__(self):
         return self.elems[0].__repr__()
+
+
+@chain([rid("OpenParen"), rid("Expression"), rid("ClosedParen")])
+class WrappedExpression(MathSettings):
+    def __repr__(self):
+        return " ( " + self.elems[1].__repr__() + " ) "
 
 
 @exact_match("(")
