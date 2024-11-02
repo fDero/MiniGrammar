@@ -1,4 +1,3 @@
-
 class StringParserIterator:
     def __init__(self, source_text):
         self._index = 0

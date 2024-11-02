@@ -1,6 +1,5 @@
 from minigrammar import *
 
-
 class MathSettings(BasicLanguageSettings):
     pass
 
