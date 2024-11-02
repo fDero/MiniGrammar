@@ -1,5 +1,6 @@
 
 [![PyPI](https://img.shields.io/badge/-PyPI-blue.svg?logo=pypi&labelColor=555555)](https://pypi.org/project/minigrammar "PyPI")
+![license: MIT](https://img.shields.io/badge/license-MIT-blue)
 # MiniGrammar
 
 A parser-generation library that makes use of python metaprogramming to inject the parsing-logic 
