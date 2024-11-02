@@ -10,7 +10,7 @@ class ParsingRegexPatterns(unittest.TestCase):
 
     def test_case_digest_everything_successfully(self):
         @regex_pattern(r'\b-?\d+\b')
-        class Integer(BasicLanguageSettings): pass
+        class Integer(LanguageSettings): pass
 
         iterator = StringParserIterator("10")
         Integer(iterator)
@@ -18,7 +18,7 @@ class ParsingRegexPatterns(unittest.TestCase):
 
     def test_case_regex_mismatch_left_the_iterator_untouched(self):
         @regex_pattern(r'\b-?\d+\b')
-        class Integer(BasicLanguageSettings): pass
+        class Integer(LanguageSettings): pass
 
         iterator = StringParserIterator("XX")
         with self.assertRaises(CannotParseException):
@@ -27,7 +27,7 @@ class ParsingRegexPatterns(unittest.TestCase):
 
     def test_case_regex_mismatch_on_empty_string_left_the_iterator_untouched(self):
         @regex_pattern(r'\b-?\d+\b')
-        class Integer(BasicLanguageSettings): pass
+        class Integer(LanguageSettings): pass
 
         iterator = StringParserIterator("")
         with self.assertRaises(CannotParseException):
@@ -36,7 +36,7 @@ class ParsingRegexPatterns(unittest.TestCase):
 
     def test_case_regex_ok_on_empty_string_left_the_iterator_untouched(self):
         @regex_pattern(r'')
-        class Empty(BasicLanguageSettings): pass
+        class Empty(LanguageSettings): pass
 
         iterator = StringParserIterator("")
         Empty(iterator)

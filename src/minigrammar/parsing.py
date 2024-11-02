@@ -56,7 +56,14 @@ def _pretend_counter_within_bounds(counter, minimum, maximum):
         raise CannotParseException()
 
 
-def exact_match(keyword_or_symbol):
+def exact_match(keyword_or_symbol: str):
+    """
+    Used to decorate a user-defined class. That user defined class gets injected
+    with all the necessary parsing-logic and becomes able to represent a grammar rule (e.g. a node in the AST).
+    In particular, this decorator turns the class into a node representing a given keyword or a symbol.
+    Such symbol gets stored in string format as the only element in the elems array, which is an instance field.
+    :param keyword_or_symbol: The keyword or symbol to match.
+    """
     def set_keyword_or_symbol_pattern_on_class(clazz):
         clazz.context[clazz.get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
@@ -70,7 +77,15 @@ def exact_match(keyword_or_symbol):
     return set_keyword_or_symbol_pattern_on_class
 
 
-def regex_pattern(pattern):
+def regex_pattern(pattern: str):
+    """
+    Used to decorate a user-defined class. That user defined class gets injected
+    with all the necessary parsing-logic and becomes able to represent a grammar rule (e.g. a node in the AST).
+    In particular, this decorator turns the class into a node representing a given regex-pattern.
+    The matching text will be stored in string format as the only element of the elems array, which
+    is an instance field.
+    :param pattern: The regex-pattern to match.
+    """
     def set_regex_pattern_on_class(clazz):
         clazz.context[clazz.get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
@@ -87,7 +102,20 @@ def regex_pattern(pattern):
     return set_regex_pattern_on_class
 
 
-def repeating(rule_name, minimum, maximum, delimiter, allow_trailing, enforce_trailing):
+def repeating(rule_name: str, minimum: int | None, maximum: int | None, delimiter: str, allow_trailing: bool, enforce_trailing: bool):
+    """
+    Used to decorate a user-defined class. That user defined class gets injected
+    with all the necessary parsing-logic and becomes able to represent a grammar rule (e.g. a node in the AST).
+    In particular, this decorator turns the class into a node representing a given sequence of multiple grammar-rule
+    occurrences of a grammar-rule separated by a delimiter. The matching text will be stored in string format as a
+    sequence of elements of the elems array, which is an instance field.
+    :param rule_name: The fully-qualified name of a decorated class
+    :param minimum: The minimum number of times to repeat the rule (None defaults to 0)
+    :param maximum: The maximum number of times to repeat the rule (None if unlimited)
+    :param delimiter: The delimiter to use between occurrences of the rule
+    :param allow_trailing: True means that trailing delimiters is allowed, False otherwise
+    :param enforce_trailing: True means that trailing delimiters is enforced, False otherwise
+    """
     def set_multiple_repeating_rules_on_class(clazz):
         clazz.context[clazz.get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
@@ -112,7 +140,13 @@ def repeating(rule_name, minimum, maximum, delimiter, allow_trailing, enforce_tr
     return set_multiple_repeating_rules_on_class
 
 
-def chain(rule_names):
+def chain(rule_names: list[str]):
+    """
+    Used to decorate a user-defined class. That user defined class gets injected
+    with all the necessary parsing-logic and becomes able to represent a grammar rule (e.g. a node in the AST).
+    In particular, this decorator turns the class into a node representing a given list of multiple different grammar-rules
+    :param rule_names: A list of fully-qualified decorated class names
+    """
     def set_multiple_sequential_rules_on_class(clazz):
         clazz.context[clazz.get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
@@ -128,7 +162,14 @@ def chain(rule_names):
     return set_multiple_sequential_rules_on_class
 
 
-def either(rule_names):
+def either(rule_names: list[str]):
+    """
+    Used to decorate a user-defined class. That user defined class gets injected
+    with all the necessary parsing-logic and becomes able to represent a grammar rule (e.g. a node in the AST).
+    In particular, this decorator turns the class into a node representing one single grammar-rule within a list
+    of possible grammar-rules.
+    :param rule_names: A list of fully-qualified decorated class names
+    """
     def set_mutually_exclusive_rules_on_class(clazz):
         clazz.context[clazz.get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):

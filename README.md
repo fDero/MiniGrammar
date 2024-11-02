@@ -70,9 +70,4 @@ class ClosedParen(MathSettings):
 
 This class has also a way to be printed in the console. The user can add method for evaluating the expression or to serialize it in multiple ways
 and so on. Possibilities are limitless, feel free to explore with your creativity as long as the grammar is not left-recursive and as long as 
-regex are non-prefix. The whole example has being uploaded in `MiniGrammar/showcase/math_demo.py`. To run the
-example just run the following command.
-
-```bash
-$ python -m showcase.math_demo
-```
+regex are non-prefix. The whole example has being uploaded in `MiniGrammar/examples/math_demo.py`.

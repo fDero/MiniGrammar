@@ -1,7 +1,7 @@
 import sys
 from minigrammar import *
 
-class CSVSettings(BasicLanguageSettings):
+class CSVSettings(LanguageSettings):
 
     @classmethod
     def ignore_characters(cls, char):

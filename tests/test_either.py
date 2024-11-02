@@ -1,7 +1,7 @@
 import unittest
 
 from minigrammar.string_parser_iterator import StringParserIterator
-from minigrammar.language_settings import BasicLanguageSettings
+from minigrammar.language_settings import LanguageSettings
 from minigrammar.parsing import *
 from minigrammar.exceptions import *
 
@@ -10,13 +10,13 @@ class ParsingEither(unittest.TestCase):
 
     def test_case_digest_everything_successfully(self):
         @exact_match("10")
-        class Number10(BasicLanguageSettings): pass
+        class Number10(LanguageSettings): pass
 
         @exact_match("Hello")
-        class Hello(BasicLanguageSettings): pass
+        class Hello(LanguageSettings): pass
 
         @either([Hello.get_id(), Number10.get_id()])
-        class Number10OrHello(BasicLanguageSettings): pass
+        class Number10OrHello(LanguageSettings): pass
 
         iterator = StringParserIterator("Hello")
         Number10OrHello(iterator)
@@ -24,13 +24,13 @@ class ParsingEither(unittest.TestCase):
 
     def test_case_digest_everything_successfully2(self):
         @exact_match("10")
-        class Number10(BasicLanguageSettings): pass
+        class Number10(LanguageSettings): pass
 
         @exact_match("Hello")
-        class Hello(BasicLanguageSettings): pass
+        class Hello(LanguageSettings): pass
 
         @either([Hello.get_id(), Number10.get_id()])
-        class Number10OrHello(BasicLanguageSettings): pass
+        class Number10OrHello(LanguageSettings): pass
 
         iterator = StringParserIterator("10")
         Number10OrHello(iterator)
@@ -38,13 +38,13 @@ class ParsingEither(unittest.TestCase):
 
     def test_case_no_case_matches(self):
         @exact_match("10")
-        class Number10(BasicLanguageSettings): pass
+        class Number10(LanguageSettings): pass
 
         @exact_match("Hello")
-        class Hello(BasicLanguageSettings): pass
+        class Hello(LanguageSettings): pass
 
         @either([Hello.get_id(), Number10.get_id()])
-        class Number10OrHello(BasicLanguageSettings): pass
+        class Number10OrHello(LanguageSettings): pass
 
         iterator = StringParserIterator("XX")
         with self.assertRaises(CannotParseException):
