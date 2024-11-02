@@ -1,9 +1,15 @@
+
+[![PyPI](https://img.shields.io/badge/-PyPI-blue.svg?logo=pypi&labelColor=555555)](https://pypi.org/project/minigrammar "PyPI")
 # MiniGrammar
 
 A parser-generation library that makes use of python metaprogramming to inject the parsing-logic 
 into user defined AST-classes. All the user has to do is to decorate the classes in the codebase
 with the provided decorators. Such decorators will inject into the classes a constructor (`__init__`) and
-a list of parsed elements (`elems`), wich will be accessible for every instance of the classes.
+a list of parsed elements (`elems`), which will be accessible for every instance of the classes.
+
+```bash
+pip install minigrammar
+```
 
 ---
 
