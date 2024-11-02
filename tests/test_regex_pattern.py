@@ -42,6 +42,14 @@ class ParsingRegexPatterns(unittest.TestCase):
         Empty(iterator)
         self.assertTrue(None == iterator.peek())
 
+    def test_case_regex_for_string_literals(self):
+        @regex_pattern(r'^"(?:[^"\\]|\\.)*"$')
+        class StringLiteral(LanguageSettings): pass
+
+        iterator = StringParserIterator('"Hello \\" World"X')
+        StringLiteral(iterator)
+        self.assertEqual("X", iterator.peek())
+
 
 if __name__ == '__main__':
     unittest.main()

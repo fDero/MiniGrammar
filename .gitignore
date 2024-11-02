@@ -25,3 +25,4 @@ htmlcov/
 .venv/
 venv/
 .env
+ignored
