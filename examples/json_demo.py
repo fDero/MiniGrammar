@@ -48,8 +48,8 @@ class ObjectField(LanguageSettings):
         return self.elems[0].__repr__() + " : " + self.elems[2].__repr__()
 
 
-@either([rid("StringLiteral"), rid("FloatingPointLiteral"), rid("IntegerLiteral"), rid("BooleanLiteral"),
-         rid("NullLiteral")])
+@either([rid("StringLiteral"), rid("FloatingPointLiteral"),
+         rid("IntegerLiteral"), rid("BooleanLiteral"), rid("NullLiteral")])
 class Value(JsonSettings):
     def __repr__(self):
         return self.elems[0].__repr__()
