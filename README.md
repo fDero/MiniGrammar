@@ -24,7 +24,7 @@ expression
     | var
     ;
 
-wrapped_expression: '(' expression ')'
+wrapped_expression: '(' expression ')';
 sum: expression PLUS expression;
 mul: expression STAR expression;
 var: ID;
@@ -49,7 +49,7 @@ factor
     | wrapped_expression
     ;
 
-wrapped_expression: '(' expression ')'
+wrapped_expression: '(' expression ')';
 var: ID;
 num: INT;
 ```

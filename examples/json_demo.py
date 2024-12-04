@@ -3,10 +3,7 @@ from minigrammar import *
 
 
 class JsonSettings(LanguageSettings):
-
-    @classmethod
-    def ignore_characters(cls, char):
-        return char == ' ' or char == '\t' or char == '\r'
+    pass
 
 
 rid = JsonSettings.get_id_of_rule_assuming_in_same_module
