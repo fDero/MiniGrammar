@@ -42,6 +42,9 @@ class ParserIterator:
         """
         self._index += 1
         self._char_pos += 1
+        if self._get_at_index(self._index) == "\n":
+            self._char_pos = 1
+            self._line_number += 1
 
     def advance_by(self, n: int) -> None:
         """
@@ -49,8 +52,8 @@ class ParserIterator:
         to query for the current value of the iterator use the peek() method
         :param n: how many times to advance the iterator
         """
-        self._index += n
-        self._char_pos += n
+        for _ in range(n):
+            self.advance()
 
     def peek(self) -> str | None:
         """
@@ -58,11 +61,8 @@ class ParserIterator:
         :return: a string of length 1 corresponding to the current value of the iterator or None if end-of-file is reached.
         """
         current_char = self._get_at_index(self._index)
-        if current_char == "" or current_char is None:
+        if current_char == "":
             return None
-        if current_char == "\n":
-            self._char_pos = 1
-            self._line_number += 1
         return current_char
 
     def synchronize_with_source(self) -> None:
