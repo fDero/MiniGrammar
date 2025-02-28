@@ -1,6 +1,6 @@
 import unittest
 
-from minigrammar.string_parser_iterator import StringParserIterator
+from minigrammar.parser_implementations import StringParserIterator
 from minigrammar.language_settings import LanguageSettings
 from minigrammar.parsing import *
 from minigrammar.exceptions import *
