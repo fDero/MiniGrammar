@@ -8,16 +8,13 @@ class CSVSettings(LanguageSettings):
         return char == ' ' or char == '\t' or char == '\r'
 
 
-rid = CSVSettings.get_id_of_rule_assuming_in_same_module
-
-
-@repeating(rid("Record"), None, None, '\n', False, False)
+@repeating("Record", None, None, '\n', False, False)
 class Document(CSVSettings):
     def __repr__(self):
         return self.elems.__repr__()
 
 
-@repeating(rid("Field"), None, None, ',', False, False)
+@repeating("Field", None, None, ',', False, False)
 class Record(CSVSettings):
     def __repr__(self):
         return self.elems.__repr__()

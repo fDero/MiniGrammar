@@ -10,7 +10,7 @@ class LanguageSettings:
         self.elems = []
 
     @classmethod
-    def get_id(cls):
+    def _get_id(cls):
         """
         Used by the parsing-logic injected by decorators to know their own fully-qualified rule-name.
         Should be inherited by a language-specific-configuration-class which itself inherits from LanguageSettings.
@@ -19,14 +19,16 @@ class LanguageSettings:
         return f"{cls.__module__}.{cls.__qualname__}"
 
     @classmethod
-    def get_id_of_rule_assuming_in_same_module(cls, class_name: str) -> str:
+    def _fetch_parsing_rule_classname(cls, class_name: str | type) -> str:
         """
         This method is supposed to be aliased, and used to consistently refer to a given grammar-rule using
         just the name of the class. For this to work, such class must be defined within the same module.
         :param class_name: the name of a user-defined class, representing a grammar-rule, in the same module
         :return: the fully-qualified name of the given grammar-rule
         """
-        id_of_settings_class_without_last_part = cls.get_id()
+        if not isinstance(class_name, str): 
+            return class_name._get_id()
+        id_of_settings_class_without_last_part = cls._get_id()
         while id_of_settings_class_without_last_part[-1] != '.':
             id_of_settings_class_without_last_part = id_of_settings_class_without_last_part[:-1]
         return id_of_settings_class_without_last_part + class_name

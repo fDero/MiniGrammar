@@ -66,7 +66,7 @@ def exact_match(keyword_or_symbol: str):
     :param keyword_or_symbol: The keyword or symbol to match.
     """
     def set_keyword_or_symbol_pattern_on_class(clazz):
-        clazz.context[clazz.get_id()] = clazz
+        clazz.context[clazz._get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
             _ignore_every_non_important_character(clazz, iterator_copy)
@@ -88,7 +88,7 @@ def regex_pattern(pattern: str):
     :param pattern: The regex-pattern to match.
     """
     def set_regex_pattern_on_class(clazz):
-        clazz.context[clazz.get_id()] = clazz
+        clazz.context[clazz._get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
             string_buffer = io.StringIO()
@@ -118,11 +118,12 @@ def repeating(rule_name: str, minimum: int | None, maximum: int | None, delimite
     :param enforce_trailing: True means that trailing delimiters is enforced, False otherwise
     """
     def set_multiple_repeating_rules_on_class(clazz):
-        clazz.context[clazz.get_id()] = clazz
+        clazz.context[clazz._get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
             _ignore_every_non_important_character(clazz, iterator_copy)
-            parsed_element = _attempt_parse_rule_by_name(clazz.context, rule_name, iterator_copy, minimum is not None and minimum <= 0)
+            unaliased_name = clazz._fetch_parsing_rule_classname(rule_name)
+            parsed_element = _attempt_parse_rule_by_name(clazz.context, unaliased_name, iterator_copy, minimum is not None and minimum <= 0)
             counter = 0 if parsed_element is None else 1
             extracted_delimiter = delimiter
             self.elems = [parsed_element]
@@ -131,7 +132,7 @@ def repeating(rule_name: str, minimum: int | None, maximum: int | None, delimite
                 extracted_delimiter = _attempt_parse_exact_match(delimiter, iterator_copy, enforce_trailing)
                 if extracted_delimiter is not None:
                     _ignore_every_non_important_character(clazz, iterator_copy)
-                    parsed_element = _attempt_parse_rule_by_name(clazz.context, rule_name, iterator_copy, not allow_trailing)
+                    parsed_element = _attempt_parse_rule_by_name(clazz.context, unaliased_name, iterator_copy, not allow_trailing)
                     self.elems.append(parsed_element)
                 counter += 1
             _expect_counter_within_bounds(counter, minimum, maximum)
@@ -149,13 +150,14 @@ def chain(rule_names: list[str]):
     :param rule_names: A list of fully-qualified decorated class names
     """
     def set_multiple_sequential_rules_on_class(clazz):
-        clazz.context[clazz.get_id()] = clazz
+        clazz.context[clazz._get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
             _ignore_every_non_important_character(clazz, iterator_copy)
             self.elems = []
             for r_name in rule_names:
-                parsed_element = _attempt_parse_rule_by_name(clazz.context, r_name, iterator_copy, True)
+                unaliased_name = clazz._fetch_parsing_rule_classname(r_name)
+                parsed_element = _attempt_parse_rule_by_name(clazz.context, unaliased_name, iterator_copy, True)
                 self.elems.append(parsed_element)
             iterator_copy.synchronize_with_source()
         setattr(clazz, "__init__", custom__init__)
@@ -172,12 +174,13 @@ def either(rule_names: list[str]):
     :param rule_names: A list of fully-qualified decorated class names
     """
     def set_mutually_exclusive_rules_on_class(clazz):
-        clazz.context[clazz.get_id()] = clazz
+        clazz.context[clazz._get_id()] = clazz
         def custom__init__(self, iterator_over_input_token_stream):
             iterator_copy = iterator_over_input_token_stream.clone()
             _ignore_every_non_important_character(clazz, iterator_copy)
             for r_name in rule_names:
-                self._elem = _attempt_parse_rule_by_name(clazz.context, r_name, iterator_copy, False)
+                unaliased_name = clazz._fetch_parsing_rule_classname(r_name)
+                self._elem = _attempt_parse_rule_by_name(clazz.context, unaliased_name, iterator_copy, False)
                 if self._elem is not None:
                     self.elems = [self._elem]
                     iterator_copy.synchronize_with_source()

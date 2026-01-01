@@ -2,13 +2,13 @@ from minigrammar import *
 
 
 class MathSettings(LanguageSettings):
-    pass
+
+    @classmethod
+    def ignore_characters(cls, char):
+        return char == ' ' or char == '\t' or char == '\r' or char == '\n'
 
 
-rid = MathSettings.get_id_of_rule_assuming_in_same_module
-
-
-@repeating(rid("Addend"), 1, None, '+', False, False)
+@repeating("Addend", 1, None, '+', False, False)
 class Expression(MathSettings):
     def __repr__(self):
         string = self.elems[0].__repr__()
@@ -17,7 +17,7 @@ class Expression(MathSettings):
         return " { " + string + " } "
 
 
-@repeating(rid("Factor"), 1, None, '*', False, False)
+@repeating("Factor", 1, None, '*', False, False)
 class Addend(MathSettings):
     def __repr__(self):
         string = self.elems[0].__repr__()
@@ -26,7 +26,7 @@ class Addend(MathSettings):
         return " { " + string + " } "
 
 
-@either([rid("Number"), rid("Variable"), rid("WrappedExpression")])
+@either(["Number", "Variable", "WrappedExpression"])
 class Factor(MathSettings):
     def __repr__(self):
         return self.elems[0].__repr__()
@@ -44,7 +44,7 @@ class Variable(MathSettings):
         return self.elems[0].__repr__()
 
 
-@chain([rid("OpenParen"), rid("Expression"), rid("ClosedParen")])
+@chain(["OpenParen", "Expression", "ClosedParen"])
 class WrappedExpression(MathSettings):
     def __repr__(self):
         return " ( " + self.elems[1].__repr__() + " ) "

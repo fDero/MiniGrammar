@@ -12,7 +12,7 @@ class ParsingRepeating(unittest.TestCase):
         @exact_match("10")
         class Number10(LanguageSettings): pass
 
-        @repeating(Number10.get_id(), None, None, ',', True, False)
+        @repeating(Number10, None, None, ',', True, False)
         class Numbers(LanguageSettings): pass
 
         iterator = StringParserIterator("10,10,10")
@@ -23,7 +23,7 @@ class ParsingRepeating(unittest.TestCase):
         @exact_match("10")
         class Number10(LanguageSettings): pass
 
-        @repeating(Number10.get_id(), None, None, ',', True, False)
+        @repeating(Number10, None, None, ',', True, False)
         class Numbers(LanguageSettings): pass
 
         iterator = StringParserIterator("10 , 10 , 10")
@@ -34,7 +34,7 @@ class ParsingRepeating(unittest.TestCase):
         @exact_match("10")
         class Number10(LanguageSettings): pass
 
-        @repeating(Number10.get_id(), None, None, ',', True, False)
+        @repeating(Number10, None, None, ',', True, False)
         class Numbers(LanguageSettings): pass
 
         iterator = StringParserIterator(" 10 ,10,10")
@@ -46,7 +46,7 @@ class ParsingRepeating(unittest.TestCase):
         @exact_match("10")
         class Number10(LanguageSettings): pass
 
-        @repeating(Number10.get_id(), None, None, ',', True, False)
+        @repeating(Number10, None, None, ',', True, False)
         class Numbers(LanguageSettings): pass
 
         iterator = StringParserIterator("XX, 10")
@@ -57,7 +57,7 @@ class ParsingRepeating(unittest.TestCase):
         @exact_match("10")
         class Number10(LanguageSettings): pass
 
-        @repeating(Number10.get_id(), 5, None, ',', True, False)
+        @repeating(Number10, 5, None, ',', True, False)
         class Numbers(LanguageSettings): pass
 
         iterator = StringParserIterator("XX, 10")
@@ -69,7 +69,7 @@ class ParsingRepeating(unittest.TestCase):
         @exact_match("10")
         class Number10(LanguageSettings): pass
 
-        @repeating(Number10.get_id(), 1, 3, ',', True, False)
+        @repeating(Number10, 1, 3, ',', True, False)
         class Numbers(LanguageSettings): pass
 
         iterator = StringParserIterator("10, 10, 10, 10")
@@ -81,7 +81,7 @@ class ParsingRepeating(unittest.TestCase):
         @exact_match("10")
         class Number10(LanguageSettings): pass
 
-        @repeating(Number10.get_id(), None, None, ',', True, False)
+        @repeating(Number10, None, None, ',', True, False)
         class Numbers(LanguageSettings): pass
 
         iterator = StringParserIterator("10, 10, 10, XX, ")
@@ -92,7 +92,7 @@ class ParsingRepeating(unittest.TestCase):
         @exact_match("10")
         class Number10(LanguageSettings): pass
 
-        @repeating(Number10.get_id(), None, None, ',', True, True)
+        @repeating(Number10, None, None, ',', True, True)
         class Numbers(LanguageSettings): pass
 
         iterator = StringParserIterator("10, 10, 10, 10 ")
@@ -105,7 +105,7 @@ class ParsingRepeating(unittest.TestCase):
         @exact_match("10")
         class Number10(LanguageSettings): pass
 
-        @repeating(Number10.get_id(), None, None, ',', False, False)
+        @repeating(Number10, None, None, ',', False, False)
         class Numbers(LanguageSettings): pass
 
         iterator = StringParserIterator("10, 10, 10, 10, ")

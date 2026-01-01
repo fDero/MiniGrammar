@@ -3,50 +3,49 @@ from minigrammar import *
 
 
 class JsonSettings(LanguageSettings):
-    pass
+
+    @classmethod
+    def ignore_characters(cls, char):
+        return char == ' ' or char == '\t' or char == '\r' or char == '\n'
 
 
-rid = JsonSettings.get_id_of_rule_assuming_in_same_module
-
-
-@either([rid("Array"), rid("Value"), rid("Object")])
+@either(["Array", "Value", "Object"])
 class Json(JsonSettings):
     def __repr__(self):
         return self.elems[0].__repr__()
 
 
-@chain([rid("OpenSquareBracket"), rid("MultipleArrayElems"), rid("ClosedSquareBracket")])
+@chain(["OpenSquareBracket", "MultipleArrayElems", "ClosedSquareBracket"])
 class Array(JsonSettings):
     def __repr__(self):
         return "[" + self.elems[1].__repr__() + "]"
 
 
-@chain([rid("OpenCurlyBracket"), rid("MultipleObjectFields"), rid("ClosedCurlyBracket")])
+@chain(["OpenCurlyBracket", "MultipleObjectFields", "ClosedCurlyBracket"])
 class Object(JsonSettings):
     def __repr__(self):
         return "{" + self.elems[1].__repr__() + "}"
 
 
-@repeating(rid("Json"), None, None, ',', False, False)
-class MultipleArrayElems(LanguageSettings):
+@repeating("Json", None, None, ',', False, False)
+class MultipleArrayElems(JsonSettings):
     def __repr__(self):
         return self.elems.__repr__()[1:-1]
 
 
-@repeating(rid("ObjectField"), None, None, ',', False, False)
-class MultipleObjectFields(LanguageSettings):
+@repeating("ObjectField", None, None, ',', False, False)
+class MultipleObjectFields(JsonSettings):
     def __repr__(self):
         return self.elems.__repr__()[1:-1]
 
 
-@chain([rid("StringLiteral"), rid("Colon"), rid("Json")])
-class ObjectField(LanguageSettings):
+@chain(["StringLiteral", "Colon", "Json"])
+class ObjectField(JsonSettings):
     def __repr__(self):
         return self.elems[0].__repr__() + " : " + self.elems[2].__repr__()
 
 
-@either([rid("StringLiteral"), rid("FloatingPointLiteral"),
-         rid("IntegerLiteral"), rid("BooleanLiteral"), rid("NullLiteral")])
+@either(["StringLiteral", "FloatingPointLiteral", "IntegerLiteral", "BooleanLiteral", "NullLiteral"])
 class Value(JsonSettings):
     def __repr__(self):
         return self.elems[0].__repr__()
@@ -83,31 +82,31 @@ class BooleanLiteral(JsonSettings):
 
 
 @exact_match("[")
-class OpenSquareBracket(LanguageSettings):
+class OpenSquareBracket(JsonSettings):
     def __repr__(self):
         return self.elems[0].__repr__()
 
 
 @exact_match("]")
-class ClosedSquareBracket(LanguageSettings):
+class ClosedSquareBracket(JsonSettings):
     def __repr__(self):
         return self.elems[0].__repr__()
 
 
 @exact_match("{")
-class OpenCurlyBracket(LanguageSettings):
+class OpenCurlyBracket(JsonSettings):
     def __repr__(self):
         return self.elems[0].__repr__()
 
 
 @exact_match("}")
-class ClosedCurlyBracket(LanguageSettings):
+class ClosedCurlyBracket(JsonSettings):
     def __repr__(self):
         return self.elems[0].__repr__()
 
 
 @exact_match(":")
-class Colon(LanguageSettings):
+class Colon(JsonSettings):
     def __repr__(self):
         return self.elems[0].__repr__()
 

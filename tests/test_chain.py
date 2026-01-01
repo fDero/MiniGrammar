@@ -15,7 +15,7 @@ class ParsingChain(unittest.TestCase):
         @exact_match("Hello")
         class Hello(LanguageSettings): pass
 
-        @chain([Number10.get_id(), Hello.get_id()])
+        @chain([Number10, Hello])
         class Number10ThenHello(LanguageSettings): pass
 
         iterator = StringParserIterator("10Hello")
@@ -29,7 +29,7 @@ class ParsingChain(unittest.TestCase):
         @exact_match("Hello")
         class Hello(LanguageSettings): pass
 
-        @chain([Number10.get_id(), Hello.get_id()])
+        @chain([Number10, Hello])
         class Number10ThenHello(LanguageSettings): pass
 
         iterator = StringParserIterator("XX")
@@ -44,7 +44,7 @@ class ParsingChain(unittest.TestCase):
         @exact_match("Hello")
         class Hello(LanguageSettings): pass
 
-        @chain([Number10.get_id(), Hello.get_id()])
+        @chain([Number10, Hello])
         class Number10ThenHello(LanguageSettings): pass
 
         iterator = StringParserIterator("")
@@ -59,7 +59,7 @@ class ParsingChain(unittest.TestCase):
         @exact_match("Hello")
         class Hello(LanguageSettings): pass
 
-        @chain([Number10.get_id(), Hello.get_id()])
+        @chain([Number10, Hello])
         class Number10ThenHello(LanguageSettings): pass
 
         iterator = StringParserIterator("10")
@@ -74,7 +74,7 @@ class ParsingChain(unittest.TestCase):
         @exact_match("Hello")
         class Hello(LanguageSettings): pass
 
-        @chain([Number10.get_id(), Hello.get_id()])
+        @chain([Number10, Hello])
         class Number10ThenHello(LanguageSettings): pass
 
         iterator = StringParserIterator("10He")
