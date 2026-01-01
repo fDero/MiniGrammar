@@ -16,44 +16,49 @@ def _keep_parsing_until_regex_match(pattern, string_buffer, iterator_copy):
         iterator_copy.advance()
 
 
-def _keep_parsing_until_regex_fail(pattern, string_buffer, iterator_copy):
-    while iterator_copy.peek() is not None:
-        if not re.fullmatch(pattern, string_buffer.getvalue() + iterator_copy.peek()):
+def _keep_parsing_until_regex_fail(pattern, string_buffer, iterator):
+    while iterator.peek() is not None:
+        if not re.fullmatch(pattern, string_buffer.getvalue() + iterator.peek()):
             break
-        string_buffer.write(iterator_copy.peek())
-        iterator_copy.advance()
+        string_buffer.write(iterator.peek())
+        iterator.advance()
 
 
-def _attempt_parse_exact_match(keyword_or_symbol, iterator_copy, fail_is_error):
+def _attempt_parse_exact_match(keyword_or_symbol, iterator, fail_is_error):
     for char in keyword_or_symbol:
-        if iterator_copy.peek() != char:
+        if iterator.peek() != char:
             if fail_is_error:
+                iterator.snapshot(0)
                 raise CannotParseException()
             else:
                 return None
-        iterator_copy.advance()
+        iterator.advance()
     return keyword_or_symbol
 
 
-def _attempt_regex_match(pattern, string_buffer):
+def _attempt_regex_match(pattern, iterator, string_buffer):
     if not re.match(pattern, string_buffer.getvalue()):
+        iterator.snapshot(len(string_buffer.getvalue()))
         raise CannotParseException()
 
 
-def _attempt_parse_rule_by_name(context, rule_name, iterator_copy, fail_is_error):
+def _attempt_parse_rule_by_name(context, rule_name, iterator, fail_is_error):
     try:
-        return context[rule_name](iterator_copy)
+        return context[rule_name](iterator)
     except CannotParseException:
         if fail_is_error:
+            iterator.snapshot(0)
             raise CannotParseException()
         else:
             return None
 
 
-def _expect_counter_within_bounds(counter, minimum, maximum):
+def _expect_counter_within_bounds(counter, minimum, maximum, iterator):
     if minimum is not None and counter <= minimum:
+        iterator.snapshot(0)
         raise CannotParseException()
     if maximum is not None and counter >= maximum:
+        iterator.snapshot(0)
         raise CannotParseException()
 
 
@@ -94,7 +99,7 @@ def regex_pattern(pattern: str):
             string_buffer = io.StringIO()
             _ignore_every_non_important_character(clazz, iterator_copy)
             _keep_parsing_until_regex_match(pattern, string_buffer, iterator_copy)
-            _attempt_regex_match(pattern, string_buffer)
+            _attempt_regex_match(pattern, iterator_copy, string_buffer)
             _keep_parsing_until_regex_fail(pattern, string_buffer, iterator_copy)
             iterator_copy.synchronize_with_source()
             self.elems = [string_buffer.getvalue()]
@@ -135,7 +140,7 @@ def repeating(rule_name: str, minimum: int | None, maximum: int | None, delimite
                     parsed_element = _attempt_parse_rule_by_name(clazz.context, unaliased_name, iterator_copy, not allow_trailing)
                     self.elems.append(parsed_element)
                 counter += 1
-            _expect_counter_within_bounds(counter, minimum, maximum)
+            _expect_counter_within_bounds(counter, minimum, maximum, iterator_copy)
             iterator_copy.synchronize_with_source()
         setattr(clazz, "__init__", custom__init__)
         return clazz

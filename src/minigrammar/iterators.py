@@ -15,6 +15,7 @@ class ParserIterator:
         self._line_number = 1
         self._get_at_index = get_at_index
         self._generator = None
+        self._snapshots = []
 
     def __iter__(self):
         return self
@@ -31,6 +32,7 @@ class ParserIterator:
         :return: an independent clone of this iterator, with its own state
         """
         cloned = ParserIterator(self._get_at_index)
+        cloned._snapshots = self._snapshots
         cloned._char_pos = self._char_pos
         cloned._line_number = self._line_number
         cloned._index = self._index
@@ -77,6 +79,24 @@ class ParserIterator:
             self._generator._index = self._index
             self._generator._char_pos = self._char_pos
             self._generator._line_number = self._line_number
+
+    def snapshot(self, offset : int = 0):
+        """
+        Used to save the current coordinates of the iterator and later recover the location of an error 
+        even in cases where the original iterator has been advanced or restored to a previous state.
+        """
+        self._snapshots.append((self._line_number, self._char_pos - offset))
+
+    def inspect_for_errors(self) -> tuple[int, int]:
+        """
+        Used to get the furthest snapshot saved so far, which corresponds to the location of the most 
+        advanced error. This always returns something even if no exception were raised during parsing.
+        You should only care about inspecting for errors if you catched an exception in a try/catch block.
+        :return: a tuple (line_number, char_pos) corresponding to the furthest snapshot saved so far.
+        """
+        if len(self._snapshots) == 0:
+            return (1, 1)
+        return max(self._snapshots, key=lambda x: (x[0], x[1]))
 
 
 

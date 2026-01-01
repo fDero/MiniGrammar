@@ -2,7 +2,6 @@ from minigrammar import *
 
 
 class MathSettings(LanguageSettings):
-
     @classmethod
     def ignore_characters(cls, char):
         return char == ' ' or char == '\t' or char == '\r' or char == '\n'
