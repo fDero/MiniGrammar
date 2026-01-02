@@ -3,8 +3,8 @@
 ![license: MIT](https://img.shields.io/badge/license-MIT-blue)
 # MiniGrammar
 
-A parser-generation library that makes use of python metaprogramming to inject the parsing-logic 
-into user defined AST-classes. All the user has to do is to decorate the classes in the codebase
+A parser-generation library that makes use of python metaprogramming to inject the parsing logic 
+into user-defined AST-classes. All the user has to do is to decorate the classes in the codebase
 with the provided decorators. Such decorators will inject into the classes a constructor (`__init__`) and
 a list of parsed elements (`elems`), which will be accessible for every instance of the classes.
 
@@ -32,7 +32,7 @@ num: INT;
 ```
 
 This grammar is left-recursive, so it will cause the parser to loop forever. But we can 
-change it in such a way to avoid this problem by refactoring it as follows:
+change it in such a way as to avoid this problem by refactoring it as follows:
 
 ```g4
 expression
@@ -54,11 +54,11 @@ var: ID;
 num: INT;
 ```
 
-Then, for every grammar rule we define a python class that will end up being used to build the **AST** itself. For instance,
+Then, for every grammar rule we define a Python class that will end up being used to build the **AST** itself. For instance,
 let's consider the class `WrappedExpression`
 
 ```python
-@chain([rid("OpenParen"), rid("Expression"), rid("ClosedParen")])
+@chain(["OpenParen", "Expression", "ClosedParen"])
 class WrappedExpression(MathSettings):
     def __repr__(self):
         return " ( " + self.elems[1].__repr__() + " ) "
@@ -75,6 +75,6 @@ class ClosedParen(MathSettings):
         return self.elems[0].__repr__()
 ```
 
-This class has also a way to be printed in the console. The user can add method for evaluating the expression or to serialize it in multiple ways
+This class also has a way to be printed in the console. The user can add methods for evaluating the expression or to serialize it in multiple ways
 and so on. Possibilities are limitless, feel free to explore with your creativity as long as the grammar is not left-recursive and as long as 
-regex are non-prefix. The whole example has being uploaded in `MiniGrammar/examples/math_demo.py`.
+regexes are non-prefix. The whole example has been uploaded in `MiniGrammar/examples/math_demo.py`.
