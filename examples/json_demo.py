@@ -112,10 +112,6 @@ class Colon(JsonSettings):
 
 if __name__ == "__main__":
     with open(sys.argv[1], 'r') as file:
-        try: 
-            iterator = FileParserIterator(file)
-            json = Json(iterator)
-            print(json) 
-        except CannotParseException: 
-            line, char = iterator.inspect_for_errors()
-            print("Error while parsing JSON [ at line:", line, "in position:", char, "]")
+        iterator = FileParserIterator(file)
+        json = Json(iterator)
+        print(json)

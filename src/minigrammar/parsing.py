@@ -29,7 +29,7 @@ def _attempt_parse_exact_match(keyword_or_symbol, iterator, fail_is_error):
         if iterator.peek() != char:
             if fail_is_error:
                 iterator.snapshot(0)
-                raise CannotParseException()
+                raise CannotParseException(iterator)
             else:
                 return None
         iterator.advance()
@@ -39,7 +39,7 @@ def _attempt_parse_exact_match(keyword_or_symbol, iterator, fail_is_error):
 def _attempt_regex_match(pattern, iterator, string_buffer):
     if not re.match(pattern, string_buffer.getvalue()):
         iterator.snapshot(len(string_buffer.getvalue()))
-        raise CannotParseException()
+        raise CannotParseException(iterator)
 
 
 def _attempt_parse_rule_by_name(context, rule_name, iterator, fail_is_error):
@@ -48,7 +48,7 @@ def _attempt_parse_rule_by_name(context, rule_name, iterator, fail_is_error):
     except CannotParseException:
         if fail_is_error:
             iterator.snapshot(0)
-            raise CannotParseException()
+            raise CannotParseException(iterator)
         else:
             return None
 
@@ -56,10 +56,10 @@ def _attempt_parse_rule_by_name(context, rule_name, iterator, fail_is_error):
 def _expect_counter_within_bounds(counter, minimum, maximum, iterator):
     if minimum is not None and counter <= minimum:
         iterator.snapshot(0)
-        raise CannotParseException()
+        raise CannotParseException(iterator)
     if maximum is not None and counter >= maximum:
         iterator.snapshot(0)
-        raise CannotParseException()
+        raise CannotParseException(iterator)
 
 
 def exact_match(keyword_or_symbol: str):
@@ -190,7 +190,7 @@ def either(rule_names: list[str]):
                     self.elems = [self._elem]
                     iterator_copy.synchronize_with_source()
                     return
-            raise CannotParseException()
+            raise CannotParseException(iterator_copy)
         setattr(clazz, "__init__", custom__init__)
         return clazz
     return set_mutually_exclusive_rules_on_class
